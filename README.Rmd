@@ -1,0 +1,94 @@
+---
+title: "ddparty"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## DDPARTY
+
+This is for managing and understanding your ddpcr data from QuantaLife.
+
+## Requirements
+
+  + [R v4+](https://www.r-project.org/)
+  + [dplyr](https://CRAN.R-project.org/package=dplyr)
+  + [readr](https://CRAN.R-project.org/package=readr)
+  + [stringr](https://CRAN.R-project.org/package=stringr)
+  + [ggplot2](https://CRAN.R-project.org/package=ggplot2)
+  + [tidyverse](https://CRAN.R-project.org/package=tidyverse)
+
+## Installation
+
+```
+remotes::install_github("rfrancolini/ddparty")
+```
+
+## Function: read_ddpcr()
+
+This function will take in csv data from the QuantaLife program and output it as a usable csv. When downloading csv data from QuantaLife, the automatically generated csv is formatting differently than the csv you will obtain if you manually call samples and export it afterwards. This function allows you to read in either type of csv, add sample metadata to it, and it will output it as a standard csv with gene copy number calculated. 
+
+### Read Auto Example Data
+"Auto" data in this instance is the automatically outputted csv file when all sample wells have been called automatically. The variable "calltype" should be set to "auto".
+
+
+```{r AutoRawExample}
+library(ddparty)
+library(readr)
+
+AutoData <- RawData_example()
+SampleMetadata <- metadata_example()
+
+RawAutoData <- read_csv(AutoData)
+
+#This is what the raw csv output looks like
+head(RawAutoData)
+```
+
+
+```{r AutoExample}
+library(ddparty)
+
+AutoData <- RawData_example()
+SampleMetadata <- metadata_example()
+
+AutoExample <- read_ddpcr(filename = AutoData, metadata = SampleMetadata, target = "Mem", calltype = "auto")
+
+#This is our processed data with our metadata attached
+head(AutoExample)
+```
+
+
+### Read Manual Example Data
+"Manual" data in this instance is the csv file that is outputted when at least one sample well has been manually called, and the csv has been exported from the QuantaLife GUI. The variable "calltype" should be set to "manual".
+
+
+```{r ManRawExample}
+library(ddparty)
+library(readr)
+
+ManData <- ManuallyEditedData_example()
+SampleMetadata <- metadata_example()
+
+ManAutoData <- read_csv(ManData)
+
+#This is what the raw csv output looks like (note it is different than the "Auto" csv)
+head(ManAutoData)
+```
+
+
+```{r ManExample}
+library(ddparty)
+
+ManData <- ManuallyEditedData_example()
+SampleMetadata <- metadata_example()
+
+ManExample <- read_ddpcr(filename = ManData, metadata = SampleMetadata, target = "Mem", calltype = "manual")
+
+#This is our processed data with our metadata attached
+head(ManExample)
+```
+
+

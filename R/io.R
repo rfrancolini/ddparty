@@ -40,7 +40,7 @@ metadata_example <- function(){
 read_ddpcr <- function(filename = ManuallyEditedData_example(),
                        metadata = metadata_example(),
                        target = NA,
-                       calltype = c("auto", "manual")[1],
+                       calltype = c("auto", "manual")[2],
                        output = NA){
 
   stopifnot(inherits(filename, "character"))
