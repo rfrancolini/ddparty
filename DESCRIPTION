@@ -13,4 +13,6 @@ Imports:
   rlang,
   dplyr,
   readr,
-  stats
+  stats,
+  stringr,
+  tidyr

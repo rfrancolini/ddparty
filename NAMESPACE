@@ -2,8 +2,10 @@
 
 export(ManuallyEditedData_example)
 export(RawData_example)
+export(mean_ddpcr)
 export(metadata_example)
 export(read_ddpcr)
 importFrom(dplyr,"%>%")
 importFrom(rlang,.data)
 importFrom(stats,na.omit)
+importFrom(stats,sd)

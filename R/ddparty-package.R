@@ -8,4 +8,5 @@
 #' @importFrom dplyr %>%
 #' @importFrom rlang .data
 #' @importFrom stats na.omit
+#' @importFrom stats sd
 NULL

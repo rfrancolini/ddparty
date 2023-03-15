@@ -134,3 +134,49 @@ read_ddpcr <- function(filename = ManuallyEditedData_example(),
 }
 
 
+
+
+
+#' Take in processed csv file and calculate mean gene copy number per site per visit
+#'
+#' @export
+#' @param inputdata tibble, ddpcr data processed and formatted with this package
+#' @param n numeric, number of samples per site, default 6
+#' @param negID character, partial string that identifies samples as negative control, these will be removed in this case, default "G"
+#' @param output character, the name for the outputted file with mean values calculated
+#' @return tibble
+mean_ddpcr <- function(inputdata,
+                       n = 6,
+                       negID = "G",
+                       output = NA){
+
+
+  #only look at calculated gene copy number
+  x <- inputdata %>%
+        dplyr::select("Sample", "CalcCopies", "season", "site") %>%
+        tidyr::drop_na("site") %>%
+        dplyr::mutate_all(~replace_na(.,0)) #replace with 0 so std/serr can be calculated
+
+
+  ##Remove negative samples
+  ##currently using partial string as given by user
+  ##create smaller dataframe with all samples that are negatives
+  negs <- x[stringr::str_detect(x$Sample, negID), ]
+  x <- dplyr::anti_join(x, negs, by = "Sample")
+
+  #mean of the samples per site
+  x_mean <- x %>%
+    dplyr::group_by(.data$season, .data$site) %>%
+    dplyr::mutate(Sum = sum(.data$CalcCopies),
+                  Mean = .data$Sum/n,
+                  Sdev = sd(.data$CalcCopies),
+                  Serr = sd(.data$CalcCopies)/sqrt(n))%>%
+    dplyr::select(-"CalcCopies", -"Sample") %>%
+    dplyr::distinct() %>%
+    dplyr::ungroup()
+
+  if (!is.na(output)) {
+          readr::write_csv(x_mean, file = output) }
+
+   return(x_mean)
+}
